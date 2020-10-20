@@ -22,13 +22,6 @@ def download_srag_data (spark):
                 .option("inferSchema", "true") \
                 .csv(path)
 
-
-    return spark.read \
-                .option("delimiter",";") \
-                .option("header",True) \
-                .option("inferSchema", "true") \
-                .csv(path)
-
 def get_covid19_data(df):
     """
     Seleciona apenas os dados de covid-19
@@ -72,7 +65,7 @@ def get_covid19_data(df):
                         ,'ANTIVIRAL'
                         ,'EVOLUCAO') \
                 .where("CLASSI_FIN=5")
-
+                
     return df_covid
 
 def main():
