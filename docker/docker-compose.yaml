@@ -1,12 +1,12 @@
 version: '3'
 services:
   spark:
-    image: jupyter/pyspark-notebook
+    image: jupyter/all-spark-notebook
     ports:
       - "8888:8888"
       - "4040-4080:4040-4080"
     volumes:
       - ./jupyter-spark/notebooks:/home/jovyan/work/notebooks/
     environment:
-      - GRANT_SUDO="yes"  
+      - GRANT_SUDO="yes"
     user: root  
