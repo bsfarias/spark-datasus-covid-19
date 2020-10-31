@@ -8,4 +8,4 @@ Projeto para capturar e armazenar os dados de covid-19 disponibilizados pelo Dat
 
 Os dados são extraídos diretamente do site [dados.gov.br/](https://dados.gov.br/dataset/bd-srag-2020).
 
-Utiliza-se um Job Spark para fazer a busca de um arquivo csv que, após processamento, é transformado em um dataframee e persistido em disco no formato parquet.
+Utiliza-se um Job Spark para fazer a busca de um arquivo csv que, após processamento, é transformado em um dataframe e persistido no S3 em formato parquet.

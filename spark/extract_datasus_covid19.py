@@ -1,5 +1,6 @@
 from pyspark.sql import SparkSession
 import requests
+import sys
 
 def download_srag_data (spark):
     """
@@ -73,7 +74,7 @@ def main():
     Função principal.
             Retorno: None
     """
-
+    S3_BUCKET  = sys.argv[1]
     spark = SparkSession.builder.appName("extract_datasus_covid19").getOrCreate()
 
     df_raw = download_srag_data(spark)
@@ -86,7 +87,7 @@ def main():
       .mode("overwrite") \
       .option("compression", "gzip") \
       .format("parquet") \
-      .save("/home/jovyan/work/covid19")
+      .save(F"s3a://{S3_BUCKET}/data/raw/datasus/covid19/")
 
- if __name__ == "__main__":
-    main()
+if __name__ == "__main__":
+        main()
