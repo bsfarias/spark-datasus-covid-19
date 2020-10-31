@@ -75,7 +75,12 @@ def main():
             Retorno: None
     """
     S3_BUCKET  = sys.argv[1]
+    ACCESS_KEY = sys.argv[2]
+    SECRET_KEY = sys.argv[3]
+
     spark = SparkSession.builder.appName("extract_datasus_covid19").getOrCreate()
+    spark.sparkContext._jsc.hadoopConfiguration().set("fs.s3a.access.key", ACCESS_KEY)
+    spark.sparkContext._jsc.hadoopConfiguration().set("fs.s3a.secret.key", SECRET_KEY)
 
     df_raw = download_srag_data(spark)
     
