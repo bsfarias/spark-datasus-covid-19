@@ -21,5 +21,6 @@ Utiliza-se um Job Spark para fazer a busca de um arquivo csv que, após processa
    - Acesse o container e faça o submit do job
 ```
    docker exec -i -t spark /bin/bash
-   spark-submit --master local[*] --packages  org.apache.hadoop:hadoop-aws:3.1.0 /home/jovyan/scripts/extract_datasus_covid19.py <Bucket name> <Aws Access Key> <Aws Secret Key>
+   spark-submit --master local[*] --packages  org.apache.hadoop:hadoop-aws:3.1.0 \
+    /home/jovyan/scripts/extract_datasus_covid19.py <Bucket name> <Aws Access Key> <Aws Secret Key>
 ```
