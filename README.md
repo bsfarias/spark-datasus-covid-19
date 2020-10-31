@@ -12,6 +12,6 @@ Utiliza-se um Job Spark para fazer a busca de um arquivo csv que, após processa
 
 ## Execução do job spark:
 ```
-	spark-submit --master local[*] 
-	extract_datasus_covid19.py <Bucket name> <Aws Access Key> <Aws Secret Key>
+ spark-submit --master local[*] 
+ extract_datasus_covid19.py <Bucket name> <Aws Access Key> <Aws Secret Key>
 ```
