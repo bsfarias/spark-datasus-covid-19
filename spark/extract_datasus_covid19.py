@@ -1,6 +1,14 @@
-from pyspark.sql import SparkSession
 import requests
 import sys
+from pyspark.sql import SparkSession
+from argparse import ArgumentParser
+
+def create_spark_session():
+    """ Retorna uma sessão spark
+    Retorno:
+        SparkSession: sessao spark
+    """
+    return SparkSession.builder.appName("extract_datasus_covid19").getOrCreate()
 
 def download_srag_data (spark):
     """
@@ -24,12 +32,11 @@ def download_srag_data (spark):
                 .csv(path)
 
 def get_covid19_data(df):
-    """
-    Seleciona apenas os dados de covid-19
-            Parametros:
-                    df (obj): DataFrame com os dados de srag.
-            Retorno:
-                    df (obj): DataFrame com dados de covid-19 (CLASSI_FIN=5).
+    """ Seleciona apenas os dados de covid-19
+    Parametros:
+            df: DataFrame com os dados de srag.
+    Retorno:
+            df: DataFrame com dados de covid-19 (CLASSI_FIN=5).
     """
     df_covid = df.select('SG_UF_NOT'
                         ,'CS_SEXO'
@@ -66,33 +73,33 @@ def get_covid19_data(df):
                         ,'ANTIVIRAL'
                         ,'EVOLUCAO') \
                 .where("CLASSI_FIN=5")
-                
     return df_covid
 
-def main():
+def load_df(df, target_path):
+    """ Persiste um dataframe em um storage
+    Parametros:
+            df: DataFrame com os dados de srag.
+    Retorno:
+            None
     """
-    Função principal.
-            Retorno: None
-    """
-    S3_BUCKET  = sys.argv[1]
-    ACCESS_KEY = sys.argv[2]
-    SECRET_KEY = sys.argv[3]
-
-    spark = SparkSession.builder.appName("extract_datasus_covid19").getOrCreate()
-    spark.sparkContext._jsc.hadoopConfiguration().set("fs.s3a.access.key", ACCESS_KEY)
-    spark.sparkContext._jsc.hadoopConfiguration().set("fs.s3a.secret.key", SECRET_KEY)
-
-    df_raw = download_srag_data(spark)
-    
-    df_covid = get_covid19_data(df_raw)
-    
-    df_covid \
-      .coalesce(1) \
+    df.coalesce(1) \
       .write \
       .mode("overwrite") \
-      .option("compression", "gzip") \
+      .option("compression", "snappy") \
       .format("parquet") \
-      .save(F"s3a://{S3_BUCKET}/data/raw/datasus/covid19/")
+      .save(target_path)
+
+def main():
+    """ Função principal.
+    """
+    parser = ArgumentParser()
+    parser.add_argument('--target_path', help='Caminho no qual o arquivo parquet final será gravado', required=True)
+    args = parser.parse_args()
+
+    spark = create_spark_session()
+
+    load_df(get_covid19_data(download_srag_data(spark)), args.target_path)
+     #"/home/jovyan/work/data/raw/datasus/covid19/"
 
 if __name__ == "__main__":
         main()
