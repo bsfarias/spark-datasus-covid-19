@@ -99,7 +99,6 @@ def main():
     spark = create_spark_session()
 
     load_df(get_covid19_data(download_srag_data(spark)), args.target_path)
-     #"/home/jovyan/work/data/raw/datasus/covid19/"
 
 if __name__ == "__main__":
         main()
